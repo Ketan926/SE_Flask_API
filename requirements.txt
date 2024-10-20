@@ -96,3 +96,4 @@ Werkzeug==3.0.3
 wheel==0.43.0
 wrapt==1.16.0
 yfinance==0.2.44
+gunicorn==20.1.0 
