@@ -86,7 +86,6 @@ stack-data==0.6.3
 tensorboard==2.16.2
 tensorboard-data-server==0.7.2
 tensorflow==2.16.2
-tensorflow-intel==2.16.2
 termcolor==2.4.0
 threadpoolctl==3.5.0
 tornado==6.4
