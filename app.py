@@ -8,16 +8,22 @@ import datetime
 
 app = Flask(__name__)
 
-# Load the pre-trained Bi-LSTM model with custom objects
-def load_model_with_custom_objects():
+# Function to load the Bi-LSTM model
+def load_bilstm_model():
     try:
-        return tf.keras.models.load_model('bilstm_model.keras', compile=False)
+        # Attempt to load the model with custom_objects
+        custom_objects = {
+            'InputLayer': tf.keras.layers.InputLayer,
+            'LSTM': tf.keras.layers.LSTM,
+            'Bidirectional': tf.keras.layers.Bidirectional,
+            'Dense': tf.keras.layers.Dense
+        }
+        model = tf.keras.models.load_model('bilstm_model.keras', custom_objects=custom_objects, compile=False)
+        print("Model loaded successfully.")
+        return model
     except Exception as e:
         print(f"Error loading model: {e}")
-        # If loading fails, try to load with custom objects
-        return tf.keras.models.load_model('bilstm_model.keras', compile=False, custom_objects={'InputLayer': tf.keras.layers.InputLayer})
-
-bilstm_model = load_model_with_custom_objects()
+        return None
 
 # Fetch and preprocess the Ethereum data
 def fetch_and_preprocess_data():
@@ -66,12 +72,21 @@ def predict_next_days(model, last_sequence, n_days=7):
 
     return np.array(predictions)
 
+# Load the Bi-LSTM model
+bilstm_model = load_bilstm_model()
+
+if bilstm_model is None:
+    print("Failed to load the model. The application may not function correctly.")
+
 # Fetch and preprocess data on API startup
 df, X_train, Y_train, scaler = fetch_and_preprocess_data()
 
 # API endpoint to predict the next 7 days and return last 7 days
 @app.route('/predict', methods=['GET'])
 def predict():
+    if bilstm_model is None:
+        return jsonify({"error": "Model failed to load. Unable to make predictions."}), 500
+
     # Get the last sequence of 60 days from the training data for prediction
     last_sequence = X_train[-1]  # Shape: (time_steps, features)
     
