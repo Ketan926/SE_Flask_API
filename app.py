@@ -8,8 +8,16 @@ import datetime
 
 app = Flask(__name__)
 
-# Load the pre-trained Bi-LSTM model
-bilstm_model = tf.keras.models.load_model('bilstm_model.keras')
+# Load the pre-trained Bi-LSTM model with custom objects
+def load_model_with_custom_objects():
+    try:
+        return tf.keras.models.load_model('bilstm_model.keras', compile=False)
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        # If loading fails, try to load with custom objects
+        return tf.keras.models.load_model('bilstm_model.keras', compile=False, custom_objects={'InputLayer': tf.keras.layers.InputLayer})
+
+bilstm_model = load_model_with_custom_objects()
 
 # Fetch and preprocess the Ethereum data
 def fetch_and_preprocess_data():
