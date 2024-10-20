@@ -9,7 +9,6 @@ charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
 comm==0.2.1
-comtypes==1.2.1
 contourpy==1.2.0
 cycler==0.12.1
 debugpy==1.8.0
@@ -20,8 +19,7 @@ Flask==3.0.3
 flatbuffers==24.3.25
 fonttools==4.48.1
 frozendict==2.4.4
-gast==0.6.0                 # Updated to match TensorFlow 2.16
-google==3.0.0
+gast==0.6.0                 # Compatible with TensorFlow 2.16
 google-pasta==0.2.0
 grpcio==1.64.1
 h5py==3.11.0
@@ -47,14 +45,12 @@ matplotlib-inline==0.1.6
 mdurl==0.1.2
 ml-dtypes==0.3.2
 multitasking==0.0.11
-namex==0.0.8
 nest-asyncio==1.5.9
 numpy==1.26.3
 openpyxl==3.1.2
 opt-einsum==3.3.0
-optree==0.12.1
 packaging==23.2
-pandas==2.2.0
+pandas==2.2.0               # For data manipulation
 parso==0.8.3
 pdfreader==0.1.12
 peewee==3.17.6
@@ -69,13 +65,12 @@ Pygments==2.17.2
 pyparsing==3.1.1
 python-dateutil==2.8.2
 python-docx==1.1.2
-pyttsx==1.1
 pyttsx3==2.90
 pytz==2023.4
 pyzmq==25.1.2
 requests==2.32.3
 rich==13.7.1
-scikit-learn==1.5.2
+scikit-learn==1.5.2        # For MinMaxScaler
 scipy==1.14.0
 seaborn==0.13.2
 setuptools==70.2.0
@@ -97,4 +92,4 @@ webencodings==0.5.1
 Werkzeug==3.0.3
 wheel==0.43.0
 wrapt==1.16.0
-yfinance==0.2.44
+yfinance==0.2.44           # For fetching financial data
