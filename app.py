@@ -6,7 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 import datetime
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 # Load the pre-trained Bi-LSTM model
 bilstm_model = tf.keras.models.load_model('bilstm_model.keras')
@@ -23,7 +23,6 @@ def fetch_and_preprocess_data():
 
     # Separate scalers for features and 'Close'
     scaler = MinMaxScaler(feature_range=(0, 1))
-    #scaler_y = MinMaxScaler(feature_range=(0, 1))
 
     # Scale features and target
     x_scaled = scaler.fit_transform(x)
@@ -46,7 +45,7 @@ def create_time_series_data(x, y, time_steps=60):
 # Function to predict the next 7 days using the trained Bi-LSTM model
 def predict_next_days(model, last_sequence, n_days=7):
     predictions = []
-    input_sequence = last_sequence.reshape(1,60, X_train.shape[2])  # Reshape to 3D: (1, time_steps, features)
+    input_sequence = last_sequence.reshape(1, 60, last_sequence.shape[1])  # Reshape to 3D: (1, time_steps, features)
 
     for _ in range(n_days):
         # Predict the next day's close price
@@ -81,25 +80,18 @@ def predict():
 
     # Generate future dates for the predicted prices
     last_date = df.index[-1]
-    past_dates = [last_date - datetime.timedelta(days=i) for i in range(7,-1,-1)]
+    past_dates = [last_date - datetime.timedelta(days=i) for i in range(7, -1, -1)]
     future_dates = [last_date + datetime.timedelta(days=i) for i in range(1, 8)]
-    closing_prices= last_7_days_actual.tolist() + predictions_original.flatten().tolist()
+    closing_prices = last_7_days_actual.tolist() + predictions_original.flatten().tolist()
     combined_dates = [f"{date.day:02d}-{date.month:02d}-{date.year}" for date in past_dates] + [f"{date.day:02d}-{date.month:02d}-{date.year}" for date in future_dates]
+
     # Return predictions and actuals in JSON format
     response = {
-        'combined_dates':combined_dates,
+        'combined_dates': combined_dates,
         'future_dates': [f"{date.day:02d}-{date.month:02d}-{date.year}" for date in future_dates],
         'past_dates': [f"{date.day:02d}-{date.month:02d}-{date.year}" for date in past_dates],
-        'last_7_days_actual': last_7_days_actual.tolist(),# Last 7 actual days (including current)
+        'last_7_days_actual': last_7_days_actual.tolist(),  # Last 7 actual days (including current)
         'predicted_prices': predictions_original.flatten().tolist(),  # Predicted prices for the next 7 days
         'closing_prices': closing_prices
     }
     return jsonify(response)
-
-# Run the Flask app
-import os
-
-# Run the Flask app
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))  # Get the port from the environment
-    app.run(host='0.0.0.0', port=port, debug=True)  # Bind to 0.0.0.0
