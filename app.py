@@ -6,7 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 import datetime
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Load the pre-trained Bi-LSTM model
 bilstm_model = tf.keras.models.load_model('bilstm_model.keras')
